@@ -8,9 +8,8 @@ if (!token) {
 const OWNER = 'project-health1';
 const REPO = 'status-repo';
 
-const statusRegex = /\[status::(.*)\]/g;
-
 function getDesiredState(title) {
+  const statusRegex = /\[status::(.*)\]/g;
   const normalizedTitle = title.toLowerCase();
   const result = statusRegex.exec(normalizedTitle);
   if (!result) {
@@ -35,7 +34,6 @@ function getDesiredState(title) {
 }
 
 async function setStatus(sha, state) {
-  console.log(`setStatus: ${sha} ${state}`);
   await octokit.repos.createStatus({
     owner: OWNER,
     repo: REPO,
