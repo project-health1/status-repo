@@ -52,14 +52,14 @@ async function getLatestCommitSha(number) {
     owner: OWNER,
     repo: REPO,
     number,
-    per_page: 1,
+    per_page: 100,
   });
 
   if (!result.data) {
     throw new Error(`Unable to retrieve list of commits for PR '${number}'`);
   }
 
-  return result.data[0].sha;
+  return result.data[result.data.length - 1].sha;
 }
 
 async function start() {
