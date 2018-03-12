@@ -1,0 +1,22 @@
+{
+  "name": "status-repo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "update-status.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/project-health1/status-repo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/project-health1/status-repo/issues"
+  },
+  "homepage": "https://github.com/project-health1/status-repo#readme",
+  "devDependencies": {
+    "@octokit/rest": "^15.2.1"
+  }
+}
