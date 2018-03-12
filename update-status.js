@@ -19,6 +19,9 @@ async function start() {
     throw new Error('Foudn no data when retrieving all pull requests.');
   }
 
+  for (const prData of result.data) {
+    console.log(prData);
+  }
 }
 
 start();
