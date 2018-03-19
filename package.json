@@ -18,5 +18,8 @@
   "homepage": "https://github.com/project-health1/status-repo#readme",
   "devDependencies": {
     "@octokit/rest": "^15.2.1"
+  },
+  "dependencies": {
+    "meow": "^4.0.0"
   }
 }

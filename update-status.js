@@ -1,13 +1,5 @@
 const octokit = require('@octokit/rest')()
 
-const token = process.env['PROJECT_HEALTH1_TOKEN'];
-if (!token) {
-  throw new Error(`No 'PROJECT_HEALTH1_TOKEN' environment variable defined.`);
-}
-
-const OWNER = 'project-health1';
-const REPO = 'status-repo';
-
 function getDesiredState(title) {
   const statusRegex = /\[status::(.*)\]/g;
   const normalizedTitle = title.toLowerCase();
@@ -33,10 +25,10 @@ function getDesiredState(title) {
   return desiredState;
 }
 
-async function setStatus(sha, state) {
+async function setStatus(owner, repo, sha, state) {
   await octokit.repos.createStatus({
-    owner: OWNER,
-    repo: REPO,
+    owner,
+    repo,
     sha: sha,
     state,
     context: 'Project Health Testing',
@@ -45,10 +37,10 @@ async function setStatus(sha, state) {
   });
 }
 
-async function getLatestCommitSha(number) {
+async function getLatestCommitSha(owner, repo, number) {
   const result = await octokit.pullRequests.getCommits({
-    owner: OWNER,
-    repo: REPO,
+    owner,
+    repo,
     number,
     per_page: 100,
   });
@@ -60,34 +52,12 @@ async function getLatestCommitSha(number) {
   return result.data[result.data.length - 1].sha;
 }
 
-async function start() {
+module.exports = async function start(token, owner, repo, prNumber, status) {
   octokit.authenticate({
     type: 'oauth',
     token: token,
   });
-  const result = await octokit.pullRequests.getAll({
-    owner: OWNER,
-    repo: REPO,
-  });
 
-  if (!result.data) {
-    throw new Error('Foudn no data when retrieving all pull requests.');
-  }
-
-  for (const prData of result.data) {
-    console.log();
-
-    const title = prData.title;
-    const desiredState = getDesiredState(title);
-    if (!desiredState) {
-      console.log(`No desired status found for '${title}'`);
-      continue;
-    }
-    console.log(`Found desired status of '${desiredState}' for '${title}'`);
-
-    const commitSha = await getLatestCommitSha(prData.number);
-    await setStatus(commitSha, desiredState);
-  }
+    const commitSha = await getLatestCommitSha(owner, repo, prNumber);
+    await setStatus(owner, repo, commitSha, status);
 }
-
-start();
